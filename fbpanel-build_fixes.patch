@@ -1,0 +1,65 @@
+diff -aurN fbpanel-3.8.orig/config/Makefile fbpanel-3.8/config/Makefile
+--- fbpanel-3.8.orig/config/Makefile	2004-04-23 02:36:40.000000000 +0200
++++ fbpanel-3.8/config/Makefile	2004-06-06 00:02:32.508607216 +0200
+@@ -18,11 +18,11 @@
+ 	$(RM) $(RES) *~
+ 
+ install: 
+-	install -d  $(PREFIX)/share/fbpanel
+-	install -m 644 $(RES) $(PREFIX)/share/fbpanel
+-	install -d  $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
++	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel
++	install -m 644 $(RES) $(DESTDIR)$(PREFIX)/share/fbpanel
++	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel/images
++	install -m 644 images/*.png $(DESTDIR)$(PREFIX)/share/fbpanel/images
++	install -m 644 images/*.xpm $(DESTDIR)$(PREFIX)/share/fbpanel/images
+ 	
+ uninstall:
+ 	rm -rf $(PREFIX)/share/fbpanel
+diff -aurN fbpanel-3.8.orig/Makefile fbpanel-3.8/Makefile
+--- fbpanel-3.8.orig/Makefile	2004-05-24 17:26:04.000000000 +0200
++++ fbpanel-3.8/Makefile	2004-06-06 00:02:06.385578520 +0200
+@@ -52,9 +52,9 @@
+ 	rm -f Makefile.config config.h
+ 
+ install: 
+-	install -d $(PREFIX)/bin
+-	install -m 755 $(TARGET) $(PREFIX)/bin
+-
++	install -d $(DESTDIR)$(PREFIX)/bin
++	install -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin
++	
+ uninstall:
+ 	rm -f $(PREFIX)/bin/$(TARGET)
+ 
+diff -aurN fbpanel-3.8.orig/Makefile.common fbpanel-3.8/Makefile.common
+--- fbpanel-3.8.orig/Makefile.common	2004-06-02 08:15:37.000000000 +0200
++++ fbpanel-3.8/Makefile.common	2004-06-05 23:21:48.350175776 +0200
+@@ -16,9 +16,9 @@
+ endif
+ 
+ CC = gcc
+-LIBS = $(shell pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0) -L/usr/X11R6/lib  -lXmu
++LIBS = $(shell pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0) -L/usr/X11R6/lib -lXmu
+ INCS = $(shell pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0)
+-CFLAGS = -O2    # overwriten by command line or env. variable
++CFLAGS = $(OPTFLAGS)
+ CFLAGS += -Wall # always nice to have 
+ ifneq (,$(DEVEL))
+ CFLAGS := -g -Wall 
+diff -aurN fbpanel-3.8.orig/man/Makefile fbpanel-3.8/man/Makefile
+--- fbpanel-3.8.orig/man/Makefile	2004-04-16 21:34:50.000000000 +0200
++++ fbpanel-3.8/man/Makefile	2004-06-06 00:03:21.946091576 +0200
+@@ -20,8 +20,8 @@
+ 
+ 
+ install: all
+-	install -d  $(PREFIX)/share/man/man1
+-	install -m 644 $(TARGET) $(PREFIX)/share/man/man1
++	install -d $(DESTDIR)$(PREFIX)/share/man/man1
++	install -m 644 $(SRC) $(DESTDIR)$(PREFIX)/share/man/man1
+ 
+ uninstall:
+ 	rm -f $(PREFIX)/share/man/man1/$(TARGET)
