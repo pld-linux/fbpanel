@@ -1,0 +1,17 @@
+Menu including syntax (part of ~/.fbpanel/default) generated with:
+vfmg -i -x -f -c -s -u fbpanel > ~/.fbpanel/menu
+
+Plugin {
+type = menu
+
+config {
+	name = menu
+	image = /usr/share/fbpanel/images/Menu.png
+
+	include {
+	name = ~/.fbpanel/menu
+	}
+	}
+}
+
+Have fun! :)
