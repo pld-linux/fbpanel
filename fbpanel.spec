@@ -6,7 +6,7 @@ Release:	1
 License:	GPL
 Group:		X11/Applications
 Source0:	http://dl.sourceforge.net/fbpanel/%{name}-%{version}.tgz
-# Source0-md5:	f82a5b2ee50ee2a8cc19ddda1aa7009c
+# Source0-md5:	73e4f4d2062c6bca39958166ea7403b5
 Patch0:		%{name}-build_fixes.patch
 Patch1:		%{name}-include_menu.patch
 URL:		http://fbpanel.sourceforge.net/
