@@ -1,0 +1,108 @@
+--- menu.c.orig	2004-04-22 00:37:31.000000000 +0200
++++ menu.c	2004-05-13 18:33:08.000000000 +0200
+@@ -55,6 +55,43 @@
+     RET();
+ }
+ 
++static FILE *
++read_include(FILE *fp)
++{
++    FILE *fi;
++    line s;
++    gchar *name;
++    
++    ENTER;
++    s.len = 256;
++    name = 0;
++    while (get_line(fp, &s) != LINE_BLOCK_END) {
++        if (s.type == LINE_VAR) {
++            if (!g_ascii_strcasecmp(s.t[0], "name")) 
++                name = expand_tilda(s.t[1]);
++            else {
++                ERR( "menu/include: unknown var %s\n", s.t[0]);
++                goto error;
++            }
++        } 
++    }
++
++    if ((fi = fopen(name, "r"))) {
++        ERR("Including %s\n", name);
++        g_free(name);
++    }
++    else {
++        ERR("Can't include %s\n", name);
++	goto error;
++    }
++      
++    RET(fi);
++
++ error:
++    g_free(name);
++    RET(NULL);
++}
++
+ static GtkWidget *
+ read_item(plugin *p)
+ {
+@@ -126,6 +163,8 @@
+     GtkWidget *mi, *menu;
+     gchar *name, *fname;
+     menup *m = (menup *)p->priv;
++    FILE *fbackup;
++    int isinclude;
+     
+     ENTER;
+     s.len = 256;
+@@ -135,15 +174,31 @@
+     //gtk_rc_parse_string(menu_rc);
+     
+     name = fname = 0;
++    isinclude = 0;
++    fbackup = 0;
+     while (get_line(p->fp, &s) != LINE_BLOCK_END) {       
+         if (s.type == LINE_BLOCK_START) {
+             mi = NULL;
+             if (!g_ascii_strcasecmp(s.t[0], "item")) {
+                 mi = read_item(p);
+             } else if (!g_ascii_strcasecmp(s.t[0], "separator")) {
+-                mi= read_separator(p);
++                mi = read_separator(p);
+             } else if (!g_ascii_strcasecmp(s.t[0], "menu")) {
+-                mi= read_submenu(p, level+1);
++                mi = read_submenu(p, level+1);
++            } else if (!g_ascii_strcasecmp(s.t[0], "include")) {
++                if (isinclude)
++		   {
++		     ERR("menu: illegal include in this context\n");
++                     goto error;
++		   }
++                fbackup = p->fp;
++                if ((p->fp = read_include(p->fp))) {
++		    isinclude = 1;
++		    continue;
++		} else {
++                    p->fp = fbackup;
++                    goto error;
++		}
+             } else {
+                 ERR("menu: unknown block %s\n", s.t[0]);
+                 goto error;
+@@ -158,12 +213,16 @@
+                 fname = expand_tilda(s.t[1]);
+             else if (!g_ascii_strcasecmp(s.t[0], "name"))
+                 name = g_strdup(s.t[1]);
+-            else {
++             else {
+                 ERR("menu: unknown var %s\n", s.t[0]);
+                 goto error;
+             }
++        } else if (s.type == LINE_NONE && isinclude) {
++            isinclude = 0;
++            fclose(p->fp);
++            p->fp = fbackup;
+         } else {
+-            ERR( "menu: illegal in this context %s\n", s.str);
++            ERR("menu: illegal in this context %s\n", s.str);
+             goto error;
+         }
+     }
