@@ -12,9 +12,10 @@ Patch0:		%{name}-build_fixes.patch
 Patch1:		%{name}-cleanup.patch
 Patch2:		%{name}-file_watcher.patch
 URL:		http://fbpanel.sourceforge.net/
-BuildRequires:	gtk+2-devel >= 1:2.4.0
+BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	pkgconfig
-Requires:	gtk+2 >= 1:2.4.0
+BuildRequires:	sed >= 4.0
+Requires:	gtk+2 >= 2:2.4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -29,9 +30,7 @@ fbpanel to lekki i zgodny ze specyfikacj± NETWM panel.
 %patch1 -p1
 %patch2 -p1
 
-%ifarch amd64
-    sed -i -e 's|/lib/fbpanel|/lib64/fbpanel|' plugin.c
-%endif
+sed -i -e 's|/lib/fbpanel|/%{_lib}/fbpanel|' plugin.c
 
 %build
 # no auto* tools here
@@ -57,6 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGELOG CREDITS README fbpanel.menu.readme
 %attr(755,root,root) %{_bindir}/*
+%dir %{_libdir}/%{name}
 %attr(755,root,root) %{_libdir}/%{name}/plugins
 %{_datadir}/%{name}
 %{_mandir}/man1/fbpanel*
