@@ -29,6 +29,10 @@ fbpanel to lekki i zgodny ze specyfikacj± NETWM panel.
 %patch1 -p1
 %patch2 -p1
 
+%ifarch amd64
+    sed -i -e 's|/lib/fbpanel|/lib64/fbpanel|' plugin.c
+%endif
+
 %build
 # no auto* tools here
 ./configure \
@@ -36,12 +40,13 @@ fbpanel to lekki i zgodny ze specyfikacj± NETWM panel.
 
 %{__make} \
 	OPTFLAGS="%{rpmcflags}"
-
+	
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	LIBDIR="%{_libdir}"
 
 install %{SOURCE1} .
 
