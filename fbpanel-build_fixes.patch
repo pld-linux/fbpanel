@@ -60,33 +60,33 @@ diff -aurN fbpanel-4.1.orig/man/Makefile fbpanel-4.1/man/Makefile
  	rm -f $(PREFIX)/share/man/man1/$(TARGET)
 diff -aurN fbpanel-4.1.orig/plugins/Makefile fbpanel-4.1/plugins/Makefile
 --- fbpanel-4.1.orig/plugins/Makefile	2004-12-16 12:47:42.000000000 +0100
-+++ fbpanel-4.1/plugins/Makefile	2005-05-02 19:07:36.000000000 +0200
++++ fbpanel-4.1/plugins/Makefile	2005-05-02 19:39:48.000000000 +0200
 @@ -43,9 +43,9 @@
  	$(RM)  *.dep *.so *.o  *~
  
  install: 
 -	install -d  $(PREFIX)/share/fbpanel/plugins
 -	install -m 644 $(SOBJ) $(PREFIX)/share/fbpanel/plugins
-+	install -d  $(DESTDIR)$(PREFIX)/lib/fbpanel/plugins
-+	install -m 644 $(SOBJ) $(DESTDIR)$(PREFIX)/lib/fbpanel/plugins
++	install -d  $(DESTDIR)$(LIBDIR)/fbpanel/plugins
++	install -m 644 $(SOBJ) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
 -	echo rm -rf $(PREFIX)/share/fbpanel/plugins/
-+	echo rm -rf $(PREFIX)/lib/fbpanel/plugins/
++	echo rm -rf $(LIBDIR)/fbpanel/plugins/
  
 diff -aurN fbpanel-4.1.orig/systray/Makefile fbpanel-4.1/systray/Makefile
 --- fbpanel-4.1.orig/systray/Makefile	2004-11-06 01:08:52.000000000 +0100
-+++ fbpanel-4.1/systray/Makefile	2005-05-02 19:08:04.000000000 +0200
++++ fbpanel-4.1/systray/Makefile	2005-05-02 19:37:41.000000000 +0200
 @@ -34,9 +34,9 @@
  
  
  install: 
 -	install -d  $(PREFIX)/share/fbpanel/plugins
 -	install -m 644 $(TARGET) $(PREFIX)/share/fbpanel/plugins
-+	install -d  $(DESTDIR)$(PREFIX)/lib/fbpanel/plugins
-+	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/lib/fbpanel/plugins
++	install -d  $(DESTDIR)$(LIBDIR)/fbpanel/plugins
++	install -m 644 $(TARGET) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
 -	echo rm -rf $(PREFIX)/share/fbpanel/plugins/
-+	echo rm -rf $(PREFIX)/lib/fbpanel/plugins/
++	echo rm -rf $(LIBDIR)/fbpanel/plugins/
  
