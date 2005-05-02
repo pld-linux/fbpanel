@@ -1,0 +1,38 @@
+diff -aurN fbpanel-4.1.orig/plugins/dclock.c fbpanel-4.1/plugins/dclock.c
+--- fbpanel-4.1.orig/plugins/dclock.c	2004-10-30 11:48:32.000000000 +0200
++++ fbpanel-4.1/plugins/dclock.c	2005-05-02 19:03:48.000000000 +0200
+@@ -95,7 +95,7 @@
+     dc->cfmt = dc->tfmt = dc->action = 0;
+     while (get_line(p->fp, &s) != LINE_BLOCK_END) {
+         if (s.type == LINE_NONE) {
+-            ERR( "image: illegal token %s\n", s.str);
++            ERR( "dclock: illegal token %s\n", s.str);
+             goto error;
+         }
+         if (s.type == LINE_VAR) {
+@@ -106,11 +106,11 @@
+             else if (!g_ascii_strcasecmp(s.t[0], "Action"))
+                 dc->action = g_strdup(s.t[1]);
+             else {
+-                ERR( "image: unknown var %s\n", s.t[0]);
++                ERR( "dclock: unknown var %s\n", s.t[0]);
+                 goto error;
+             }
+         } else {
+-            ERR( "image: illegal in this context %s\n", s.str);
++            ERR( "dclock: illegal in this context %s\n", s.str);
+             goto error;
+         }
+     }
+diff -aurN fbpanel-4.1.orig/plugins/test.c fbpanel-4.1/plugins/test.c
+--- fbpanel-4.1.orig/plugins/test.c	2004-05-24 05:03:25.000000000 +0200
++++ fbpanel-4.1/plugins/test.c	2005-05-02 19:03:48.000000000 +0200
+@@ -72,7 +72,7 @@
+     dc->delta = 1;
+     s.len = 256;
+     while (get_line(p->fp, &s) != LINE_BLOCK_END) {
+-        ERR( "image: illegal in this context %s\n", s.str);
++        ERR( "test: illegal in this context %s\n", s.str);
+     }
+     dc->main = p->panel->my_box_new(TRUE, 1);
+     gtk_widget_show(dc->main);

@@ -1,0 +1,151 @@
+diff -aurN fbpanel-4.1.orig/panel.c fbpanel-4.1/panel.c
+--- fbpanel-4.1.orig/panel.c	2004-12-23 18:26:05.000000000 +0100
++++ fbpanel-4.1/panel.c	2005-05-02 18:56:09.000000000 +0200
+@@ -9,6 +9,7 @@
+ #include <locale.h>
+ #include <string.h>
+ #include <signal.h>
++#include <time.h>
+ 
+ #include "plugin.h"
+ #include "panel.h"
+@@ -18,6 +19,11 @@
+ #include "gtkbgbox.h"
+ 
+ static gchar *cfgfile = NULL;
++time_t last_config_poll = 0;
++
++/* Array of config files to watch */
++GArray *config_files = NULL;
++
+ static gchar version[] = VERSION;
+ gchar *cprofile = "default";
+ 
+@@ -257,6 +263,26 @@
+ panel_configure_event (GtkWidget *widget, GdkEventConfigure *e, panel *p)
+ {
+     ENTER;
++
++    if ((time(NULL) - last_config_poll) > 10)
++    {
++    	int i;
++	struct stat cfgstat;
++	watched_file f;
++    	
++    	for (i = 0; i < config_files->len; i++)
++    	{
++	    f = g_array_index(config_files, watched_file, i);
++	    stat(f.filename, &cfgstat);
++	    if (cfgstat.st_mtime > f.mtime)
++    	    {
++		gtk_main_quit();
++	    }
++	}
++	
++	last_config_poll = time(NULL);
++    }
++
+     if (e->width == p->cw && e->height == p->ch && e->x == p->cx && e->y == p->cy)
+         RET(TRUE);
+     p->cw = e->width;
+@@ -705,6 +731,10 @@
+     ENTER;
+     fname = g_strdup_printf("%s/.fbpanel/%s", getenv("HOME"), profile);
+     if ((fp = fopen(fname, "r"))) {
++        watched_file f;
++        f.filename = fname;
++        f.mtime = time(NULL);
++        g_array_append_val(config_files, f);
+         cfgfile = fname;
+         if (verbose)
+             ERR("Using %s\n", fname);
+@@ -713,9 +743,13 @@
+     //ERR("Can't load %s\n", fname);
+     g_free(fname);
+     
+-    /* check private configuration directory */
+-    fname = g_strdup_printf("%s/share/fbpanel/%s", PREFIX, profile);
++    /* check system-wide configuration directory */
++    fname = g_strdup_printf("/etc/fbpanel/%s", profile);
+     if ((fp = fopen(fname, "r"))) {
++        watched_file f;
++        f.filename = fname;
++        f.mtime = time(NULL);
++        g_array_append_val(config_files, f);
+         cfgfile = fname;
+         if (verbose)
+             ERR("Using %s\n", fname);
+@@ -793,6 +827,19 @@
+     do {
+         if (verbose)
+             ERR("starting panel\n");
++        if (config_files)
++        {
++	    int i;
++	    watched_file w;
++	    for (i = 0; i < config_files->len; i++)
++	    {
++	    	w = g_array_index(config_files, watched_file, i);
++	    	g_free(w.filename);
++	    }
++	    g_array_free(config_files, TRUE);
++	}
++        config_files = g_array_new(FALSE, FALSE, sizeof(watched_file));
++
+         if (!(pfp = open_profile(cprofile)))
+             exit(1);
+         p = g_new0(panel, 1);
+diff -aurN fbpanel-4.1.orig/panel.h fbpanel-4.1/panel.h
+--- fbpanel-4.1.orig/panel.h	2004-12-22 18:46:00.000000000 +0100
++++ fbpanel-4.1/panel.h	2005-05-02 18:56:09.000000000 +0200
+@@ -95,6 +95,13 @@
+ 
+ extern command commands[];
+ 
++typedef struct {
++    gchar *filename;
++    time_t mtime;
++} watched_file;
++
++extern GArray *config_files;
++
+ extern gchar *cprofile;
+ 
+ extern Atom a_UTF8_STRING;
+diff -aurN fbpanel-4.1.orig/plugin.c fbpanel-4.1/plugin.c
+--- fbpanel-4.1.orig/plugin.c	2004-12-22 20:58:55.000000000 +0100
++++ fbpanel-4.1/plugin.c	2005-05-02 18:56:09.000000000 +0200
+@@ -129,7 +129,7 @@
+         DBG("opening %s\n", str->str);
+         if (!m) {
+             DBG("%s\n", g_module_error());
+-            g_string_printf(str, "%s/share/fbpanel/plugins/%s.so", PREFIX, type);
++            g_string_printf(str, "%s/lib/fbpanel/plugins/%s.so", PREFIX, type);
+             m = g_module_open(str->str, G_MODULE_BIND_LOCAL | G_MODULE_BIND_LAZY);
+             DBG("opening %s\n", str->str);
+         }
+diff -aurN fbpanel-4.1.orig/plugins/menu.c fbpanel-4.1/plugins/menu.c
+--- fbpanel-4.1.orig/plugins/menu.c	2004-12-22 15:51:55.000000000 +0100
++++ fbpanel-4.1/plugins/menu.c	2005-05-02 19:02:01.000000000 +0200
+@@ -105,8 +105,11 @@
+     }
+ 
+     if ((fi = fopen(name, "r"))) {
++        watched_file f;
++        f.filename = name;
++        f.mtime = time(NULL);
++        g_array_append_val(config_files, f);
+         ERR("Including %s\n", name);
+-        g_free(name);
+     }
+     else {
+         ERR("Can't include %s\n", name);
+@@ -336,7 +339,7 @@
+     mi = read_submenu(p, 0);
+     //bg_set_transparent_background(mi, p->panel);
+     if (!mi) {
+-        ERR("menu: plugin init failde\n");
++        ERR("menu: plugin init failed\n");
+         goto error;
+     }
+     gtk_menu_shell_append (GTK_MENU_SHELL (m->mainw), mi);
