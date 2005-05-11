@@ -2,7 +2,7 @@ Summary:	Lightweight and NETWM compliant desktop panel
 Summary(pl):	Lekki i zgodny z NETWM panel
 Name:		fbpanel
 Version:	4.1
-Release:	3
+Release:	4
 License:	GPL
 Group:		X11/Applications
 Source0:	http://dl.sourceforge.net/fbpanel/%{name}-%{version}.tgz
@@ -11,6 +11,7 @@ Source1:	%{name}.menu.readme
 Patch0:		%{name}-build_fixes.patch
 Patch1:		%{name}-cleanup.patch
 Patch2:		%{name}-file_watcher.patch
+Patch3:		%{name}-menu_style.patch
 URL:		http://fbpanel.sourceforge.net/
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	pkgconfig
@@ -29,6 +30,7 @@ fbpanel to lekki i zgodny ze specyfikacj± NETWM panel.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 sed -i -e 's|/lib/fbpanel|/%{_lib}/fbpanel|' plugin.c
 
