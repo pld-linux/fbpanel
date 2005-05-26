@@ -26,8 +26,8 @@ diff -aurN fbpanel-4.2.orig/Makefile.common fbpanel-4.2/Makefile.common
  endif
 diff -aurN fbpanel-4.2.orig/config/Makefile fbpanel-4.2/config/Makefile
 --- fbpanel-4.2.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
-+++ fbpanel-4.2/config/Makefile	2005-05-26 12:45:43.000000000 +0200
-@@ -17,11 +17,11 @@
++++ fbpanel-4.2/config/Makefile	2005-05-26 13:09:07.000000000 +0200
+@@ -17,11 +17,12 @@
  
  
  install: 
@@ -36,8 +36,9 @@ diff -aurN fbpanel-4.2.orig/config/Makefile fbpanel-4.2/config/Makefile
 -	install -d  $(PREFIX)/share/fbpanel/images
 -	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
 -	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
++	install -d  $(DESTDIR)/etc/fbpanel
++	install -m 644 $(TARGET) $(DESTDIR)/etc/fbpanel
 +	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel
-+	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/share/fbpanel
 +	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel/images
 +	install -m 644 images/*.png $(DESTDIR)$(PREFIX)/share/fbpanel/images
 +	install -m 644 images/*.xpm $(DESTDIR)$(PREFIX)/share/fbpanel/images
@@ -58,6 +59,20 @@ diff -aurN fbpanel-4.2.orig/man/Makefile fbpanel-4.2/man/Makefile
  
  uninstall:
  	$(RM) $(PREFIX)/share/man/man1/$(TARGET)
+diff -aurN fbpanel-4.2.orig/panel.c fbpanel-4.2/panel.c
+--- fbpanel-4.2.orig/panel.c	2005-05-08 09:46:40.000000000 +0200
++++ fbpanel-4.2/panel.c	2005-05-26 12:57:48.000000000 +0200
+@@ -706,8 +706,8 @@
+     //ERR("Can't load %s\n", fname);
+     g_free(fname);
+     
+-    /* check private configuration directory */
+-    fname = g_strdup_printf("%s/share/fbpanel/%s", PREFIX, profile);
++    /* check system-wide configuration directory */
++    fname = g_strdup_printf("/etc/fbpanel/%s", profile);
+     fp = fopen(fname, "r");
+     LOG(LOG_INFO, "   %s %s\n", fname, fp ? "ok" : "no");
+     if (fp) {
 diff -aurN fbpanel-4.2.orig/plugin.c fbpanel-4.2/plugin.c
 --- fbpanel-4.2.orig/plugin.c	2005-05-21 07:08:52.000000000 +0200
 +++ fbpanel-4.2/plugin.c	2005-05-26 12:44:58.000000000 +0200
