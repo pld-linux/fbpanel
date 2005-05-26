@@ -1,28 +1,8 @@
-diff -aurN fbpanel-4.1.orig/config/Makefile fbpanel-4.1/config/Makefile
---- fbpanel-4.1.orig/config/Makefile	2004-04-23 03:20:51.000000000 +0200
-+++ fbpanel-4.1/config/Makefile	2005-05-02 19:05:40.000000000 +0200
-@@ -18,11 +18,11 @@
- 	$(RM) $(RES) *~
- 
- install: 
--	install -d  $(PREFIX)/share/fbpanel
--	install -m 644 $(RES) $(PREFIX)/share/fbpanel
--	install -d  $(PREFIX)/share/fbpanel/images
--	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
--	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
-+	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel
-+	install -m 644 $(RES) $(DESTDIR)$(PREFIX)/share/fbpanel
-+	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel/images
-+	install -m 644 images/*.png $(DESTDIR)$(PREFIX)/share/fbpanel/images
-+	install -m 644 images/*.xpm $(DESTDIR)$(PREFIX)/share/fbpanel/images
- 	
- uninstall:
- 	rm -rf $(PREFIX)/share/fbpanel
-diff -aurN fbpanel-4.1.orig/Makefile fbpanel-4.1/Makefile
---- fbpanel-4.1.orig/Makefile	2004-12-18 20:31:59.000000000 +0100
-+++ fbpanel-4.1/Makefile	2005-05-02 19:05:40.000000000 +0200
-@@ -55,8 +55,8 @@
- 	rm -f Makefile.config config.h
+diff -aurN fbpanel-4.2.orig/Makefile fbpanel-4.2/Makefile
+--- fbpanel-4.2.orig/Makefile	2005-05-22 05:20:21.000000000 +0200
++++ fbpanel-4.2/Makefile	2005-05-26 12:45:43.000000000 +0200
+@@ -50,8 +50,8 @@
+ 	$(RM) Makefile.config config.h
  
  install: 
 -	install -d $(PREFIX)/bin
@@ -31,23 +11,43 @@ diff -aurN fbpanel-4.1.orig/Makefile fbpanel-4.1/Makefile
 +	install -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin
  
  uninstall:
- 	rm -f $(PREFIX)/bin/$(TARGET)
-diff -aurN fbpanel-4.1.orig/Makefile.common fbpanel-4.1/Makefile.common
---- fbpanel-4.1.orig/Makefile.common	2004-11-06 00:36:35.000000000 +0100
-+++ fbpanel-4.1/Makefile.common	2005-05-02 19:05:40.000000000 +0200
-@@ -20,7 +20,7 @@
- INCS2 = $(shell pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0)
- INCS := $(INCS2:-I%=-isystem%)
- # first = may be overwriten by command line or env. variable	
+ 	$(RM) $(PREFIX)/bin/$(TARGET)
+diff -aurN fbpanel-4.2.orig/Makefile.common fbpanel-4.2/Makefile.common
+--- fbpanel-4.2.orig/Makefile.common	2005-05-22 05:23:39.000000000 +0200
++++ fbpanel-4.2/Makefile.common	2005-05-26 12:45:43.000000000 +0200
+@@ -87,7 +87,7 @@
+ INCS2   = $(shell pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0)
+ INCS   := $(INCS2:-I%=-isystem %)
+ 
 -CFLAGS = -O2
 +CFLAGS = $(OPTFLAGS)
- # this one always applays
- CFLAGS += -Wall
- ifneq (,$(DEVEL))
-diff -aurN fbpanel-4.1.orig/man/Makefile fbpanel-4.1/man/Makefile
---- fbpanel-4.1.orig/man/Makefile	2004-03-31 12:31:11.000000000 +0200
-+++ fbpanel-4.1/man/Makefile	2005-05-02 19:05:40.000000000 +0200
-@@ -20,8 +20,8 @@
+ ifeq (1,$(DEVEL))
+ override CFLAGS += -g
+ endif
+diff -aurN fbpanel-4.2.orig/config/Makefile fbpanel-4.2/config/Makefile
+--- fbpanel-4.2.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
++++ fbpanel-4.2/config/Makefile	2005-05-26 12:45:43.000000000 +0200
+@@ -17,11 +17,11 @@
+ 
+ 
+ install: 
+-	install -d  $(PREFIX)/share/fbpanel
+-	install -m 644 $(TARGET) $(PREFIX)/share/fbpanel
+-	install -d  $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
++	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel
++	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/share/fbpanel
++	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel/images
++	install -m 644 images/*.png $(DESTDIR)$(PREFIX)/share/fbpanel/images
++	install -m 644 images/*.xpm $(DESTDIR)$(PREFIX)/share/fbpanel/images
+ 
+ uninstall:
+ 	$(RM) -r $(PREFIX)/share/fbpanel/images/
+diff -aurN fbpanel-4.2.orig/man/Makefile fbpanel-4.2/man/Makefile
+--- fbpanel-4.2.orig/man/Makefile	2005-05-22 02:51:08.000000000 +0200
++++ fbpanel-4.2/man/Makefile	2005-05-26 12:45:43.000000000 +0200
+@@ -17,8 +17,8 @@
  
  
  install: all
@@ -57,12 +57,24 @@ diff -aurN fbpanel-4.1.orig/man/Makefile fbpanel-4.1/man/Makefile
 +	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/share/man/man1
  
  uninstall:
- 	rm -f $(PREFIX)/share/man/man1/$(TARGET)
-diff -aurN fbpanel-4.1.orig/plugins/Makefile fbpanel-4.1/plugins/Makefile
---- fbpanel-4.1.orig/plugins/Makefile	2004-12-16 12:47:42.000000000 +0100
-+++ fbpanel-4.1/plugins/Makefile	2005-05-02 19:39:48.000000000 +0200
-@@ -43,9 +43,9 @@
- 	$(RM)  *.dep *.so *.o  *~
+ 	$(RM) $(PREFIX)/share/man/man1/$(TARGET)
+diff -aurN fbpanel-4.2.orig/plugin.c fbpanel-4.2/plugin.c
+--- fbpanel-4.2.orig/plugin.c	2005-05-21 07:08:52.000000000 +0200
++++ fbpanel-4.2/plugin.c	2005-05-26 12:44:58.000000000 +0200
+@@ -133,7 +133,7 @@
+         //LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
+         if (!m) {
+             DBG("error is %s\n", g_module_error());
+-            g_string_printf(str, "%s/share/fbpanel/plugins/%s.so", PREFIX, type);
++            g_string_printf(str, "%s/lib/fbpanel/plugins/%s.so", PREFIX, type);
+             m = g_module_open(str->str, G_MODULE_BIND_LAZY);
+             //LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
+             if (!m) {
+diff -aurN fbpanel-4.2.orig/plugins/Makefile fbpanel-4.2/plugins/Makefile
+--- fbpanel-4.2.orig/plugins/Makefile	2005-05-22 05:21:16.000000000 +0200
++++ fbpanel-4.2/plugins/Makefile	2005-05-26 12:45:43.000000000 +0200
+@@ -39,9 +39,9 @@
+ 
  
  install: 
 -	install -d  $(PREFIX)/share/fbpanel/plugins
@@ -71,13 +83,13 @@ diff -aurN fbpanel-4.1.orig/plugins/Makefile fbpanel-4.1/plugins/Makefile
 +	install -m 644 $(SOBJ) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
--	echo rm -rf $(PREFIX)/share/fbpanel/plugins/
-+	echo rm -rf $(LIBDIR)/fbpanel/plugins/
+-	$(RM) -r $(PREFIX)/share/fbpanel/plugins/
++	$(RM) -r $(LIBDIR)/fbpanel/plugins/
  
-diff -aurN fbpanel-4.1.orig/systray/Makefile fbpanel-4.1/systray/Makefile
---- fbpanel-4.1.orig/systray/Makefile	2004-11-06 01:08:52.000000000 +0100
-+++ fbpanel-4.1/systray/Makefile	2005-05-02 19:37:41.000000000 +0200
-@@ -34,9 +34,9 @@
+diff -aurN fbpanel-4.2.orig/systray/Makefile fbpanel-4.2/systray/Makefile
+--- fbpanel-4.2.orig/systray/Makefile	2005-05-22 05:20:58.000000000 +0200
++++ fbpanel-4.2/systray/Makefile	2005-05-26 12:45:43.000000000 +0200
+@@ -30,9 +30,9 @@
  
  
  install: 
@@ -87,6 +99,6 @@ diff -aurN fbpanel-4.1.orig/systray/Makefile fbpanel-4.1/systray/Makefile
 +	install -m 644 $(TARGET) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
--	echo rm -rf $(PREFIX)/share/fbpanel/plugins/
-+	echo rm -rf $(LIBDIR)/fbpanel/plugins/
+-	$(RM) $(PREFIX)/share/fbpanel/plugins/$(TARGET)
++	$(RM) $(LIBDIR)/fbpanel/plugins/$(TARGET)
  
