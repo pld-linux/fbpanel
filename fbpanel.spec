@@ -1,12 +1,12 @@
 Summary:	Lightweight and NETWM compliant desktop panel
 Summary(pl):	Lekki i zgodny z NETWM panel
 Name:		fbpanel
-Version:	4.2
+Version:	4.3
 Release:	1
 License:	GPL
 Group:		X11/Applications
 Source0:	http://dl.sourceforge.net/fbpanel/%{name}-%{version}.tgz
-# Source0-md5:	af51c87c59964991b5885b90be1cec47
+# Source0-md5:	2d2f3713cf3c17b71997064f39d4c888
 Source1:	%{name}.menu.readme
 Patch0:		%{name}-build_fixes.patch
 Patch1:		%{name}-file_watcher.patch
