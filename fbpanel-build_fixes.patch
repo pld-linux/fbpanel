@@ -1,7 +1,7 @@
-diff -aurN fbpanel-4.2.orig/Makefile fbpanel-4.2/Makefile
---- fbpanel-4.2.orig/Makefile	2005-05-22 05:20:21.000000000 +0200
-+++ fbpanel-4.2/Makefile	2005-05-26 12:45:43.000000000 +0200
-@@ -50,8 +50,8 @@
+diff -aurN fbpanel-4.3.orig/Makefile fbpanel-4.3/Makefile
+--- fbpanel-4.3.orig/Makefile	2005-05-31 16:55:50.000000000 +0200
++++ fbpanel-4.3/Makefile	2005-06-01 09:44:55.000000000 +0200
+@@ -48,8 +48,8 @@
  	$(RM) Makefile.config config.h
  
  install: 
@@ -12,10 +12,10 @@ diff -aurN fbpanel-4.2.orig/Makefile fbpanel-4.2/Makefile
  
  uninstall:
  	$(RM) $(PREFIX)/bin/$(TARGET)
-diff -aurN fbpanel-4.2.orig/Makefile.common fbpanel-4.2/Makefile.common
---- fbpanel-4.2.orig/Makefile.common	2005-05-22 05:23:39.000000000 +0200
-+++ fbpanel-4.2/Makefile.common	2005-05-26 12:45:43.000000000 +0200
-@@ -87,7 +87,7 @@
+diff -aurN fbpanel-4.3.orig/Makefile.common fbpanel-4.3/Makefile.common
+--- fbpanel-4.3.orig/Makefile.common	2005-05-31 17:39:18.000000000 +0200
++++ fbpanel-4.3/Makefile.common	2005-06-01 09:44:13.000000000 +0200
+@@ -89,7 +89,7 @@
  INCS2   = $(shell pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0)
  INCS   := $(INCS2:-I%=-isystem %)
  
@@ -24,9 +24,9 @@ diff -aurN fbpanel-4.2.orig/Makefile.common fbpanel-4.2/Makefile.common
  ifeq (1,$(DEVEL))
  override CFLAGS += -g
  endif
-diff -aurN fbpanel-4.2.orig/config/Makefile fbpanel-4.2/config/Makefile
---- fbpanel-4.2.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
-+++ fbpanel-4.2/config/Makefile	2005-05-26 13:09:07.000000000 +0200
+diff -aurN fbpanel-4.3.orig/config/Makefile fbpanel-4.3/config/Makefile
+--- fbpanel-4.3.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
++++ fbpanel-4.3/config/Makefile	2005-06-01 09:52:49.000000000 +0200
 @@ -17,11 +17,12 @@
  
  
@@ -45,23 +45,23 @@ diff -aurN fbpanel-4.2.orig/config/Makefile fbpanel-4.2/config/Makefile
  
  uninstall:
  	$(RM) -r $(PREFIX)/share/fbpanel/images/
-diff -aurN fbpanel-4.2.orig/man/Makefile fbpanel-4.2/man/Makefile
---- fbpanel-4.2.orig/man/Makefile	2005-05-22 02:51:08.000000000 +0200
-+++ fbpanel-4.2/man/Makefile	2005-05-26 12:45:43.000000000 +0200
+diff -aurN fbpanel-4.3.orig/man/Makefile fbpanel-4.3/man/Makefile
+--- fbpanel-4.3.orig/man/Makefile	2005-05-22 02:51:08.000000000 +0200
++++ fbpanel-4.3/man/Makefile	2005-06-01 09:46:59.000000000 +0200
 @@ -17,8 +17,8 @@
  
  
  install: all
 -	install -d  $(PREFIX)/share/man/man1
 -	install -m 644 $(TARGET) $(PREFIX)/share/man/man1
-+	install -d  $(DESTDIR)$(PREFIX)/share/man/man1
++	install -d $(DESTDIR)$(PREFIX)/share/man/man1
 +	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/share/man/man1
  
  uninstall:
  	$(RM) $(PREFIX)/share/man/man1/$(TARGET)
-diff -aurN fbpanel-4.2.orig/panel.c fbpanel-4.2/panel.c
---- fbpanel-4.2.orig/panel.c	2005-05-08 09:46:40.000000000 +0200
-+++ fbpanel-4.2/panel.c	2005-05-26 12:57:48.000000000 +0200
+diff -aurN fbpanel-4.3.orig/panel.c fbpanel-4.3/panel.c
+--- fbpanel-4.3.orig/panel.c	2005-05-08 09:46:40.000000000 +0200
++++ fbpanel-4.3/panel.c	2005-06-01 09:50:58.000000000 +0200
 @@ -706,8 +706,8 @@
      //ERR("Can't load %s\n", fname);
      g_free(fname);
@@ -73,47 +73,43 @@ diff -aurN fbpanel-4.2.orig/panel.c fbpanel-4.2/panel.c
      fp = fopen(fname, "r");
      LOG(LOG_INFO, "   %s %s\n", fname, fp ? "ok" : "no");
      if (fp) {
-diff -aurN fbpanel-4.2.orig/plugin.c fbpanel-4.2/plugin.c
---- fbpanel-4.2.orig/plugin.c	2005-05-21 07:08:52.000000000 +0200
-+++ fbpanel-4.2/plugin.c	2005-05-26 12:44:58.000000000 +0200
-@@ -133,7 +133,7 @@
-         //LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
+diff -aurN fbpanel-4.3.orig/plugin.c fbpanel-4.3/plugin.c
+--- fbpanel-4.3.orig/plugin.c	2005-05-29 06:02:03.000000000 +0200
++++ fbpanel-4.3/plugin.c	2005-06-01 09:49:53.000000000 +0200
+@@ -137,7 +137,7 @@
+         LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
          if (!m) {
              DBG("error is %s\n", g_module_error());
 -            g_string_printf(str, "%s/share/fbpanel/plugins/%s.so", PREFIX, type);
 +            g_string_printf(str, "%s/lib/fbpanel/plugins/%s.so", PREFIX, type);
              m = g_module_open(str->str, G_MODULE_BIND_LAZY);
-             //LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
+             LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
              if (!m) {
-diff -aurN fbpanel-4.2.orig/plugins/Makefile fbpanel-4.2/plugins/Makefile
---- fbpanel-4.2.orig/plugins/Makefile	2005-05-22 05:21:16.000000000 +0200
-+++ fbpanel-4.2/plugins/Makefile	2005-05-26 12:45:43.000000000 +0200
-@@ -39,9 +39,9 @@
+diff -aurN fbpanel-4.3.orig/plugins/Makefile fbpanel-4.3/plugins/Makefile
+--- fbpanel-4.3.orig/plugins/Makefile	2005-05-31 17:45:06.000000000 +0200
++++ fbpanel-4.3/plugins/Makefile	2005-06-01 09:48:12.000000000 +0200
+@@ -47,8 +47,8 @@
  
- 
+ ifeq (0,$(STATIC_PLUGINS))
  install: 
 -	install -d  $(PREFIX)/share/fbpanel/plugins
 -	install -m 644 $(SOBJ) $(PREFIX)/share/fbpanel/plugins
-+	install -d  $(DESTDIR)$(LIBDIR)/fbpanel/plugins
++	install -d $(DESTDIR)$(LIBDIR)/fbpanel/plugins
 +	install -m 644 $(SOBJ) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
--	$(RM) -r $(PREFIX)/share/fbpanel/plugins/
-+	$(RM) -r $(LIBDIR)/fbpanel/plugins/
+ 	$(RM) -r $(PREFIX)/share/fbpanel/plugins/
+diff -aurN fbpanel-4.3.orig/systray/Makefile fbpanel-4.3/systray/Makefile
+--- fbpanel-4.3.orig/systray/Makefile	2005-05-31 17:31:27.000000000 +0200
++++ fbpanel-4.3/systray/Makefile	2005-06-01 09:49:08.000000000 +0200
+@@ -41,8 +41,8 @@
  
-diff -aurN fbpanel-4.2.orig/systray/Makefile fbpanel-4.2/systray/Makefile
---- fbpanel-4.2.orig/systray/Makefile	2005-05-22 05:20:58.000000000 +0200
-+++ fbpanel-4.2/systray/Makefile	2005-05-26 12:45:43.000000000 +0200
-@@ -30,9 +30,9 @@
- 
- 
+ ifeq (0,$(STATIC_PLUGINS))
  install: 
 -	install -d  $(PREFIX)/share/fbpanel/plugins
 -	install -m 644 $(TARGET) $(PREFIX)/share/fbpanel/plugins
-+	install -d  $(DESTDIR)$(LIBDIR)/fbpanel/plugins
++	install -d $(DESTDIR)$(LIBDIR)/fbpanel/plugins
 +	install -m 644 $(TARGET) $(DESTDIR)$(LIBDIR)/fbpanel/plugins
  
  uninstall:
--	$(RM) $(PREFIX)/share/fbpanel/plugins/$(TARGET)
-+	$(RM) $(LIBDIR)/fbpanel/plugins/$(TARGET)
- 
+ 	$(RM) $(PREFIX)/share/fbpanel/plugins/$(TARGET)
