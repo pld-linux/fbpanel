@@ -37,7 +37,7 @@ sed -i -e 's|/lib/fbpanel|/%{_lib}/fbpanel|' plugin.c
 
 %{__make} \
 	OPTFLAGS="%{rpmcflags}"
-	
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -53,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG CREDITS README fbpanel.menu.readme
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/fbpanel
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fbpanel
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/%{name}
 %attr(755,root,root) %{_libdir}/%{name}/plugins
