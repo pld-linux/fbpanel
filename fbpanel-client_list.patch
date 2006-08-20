@@ -1,0 +1,12 @@
+diff -aurN fbpanel-4.3.orig/plugins/taskbar.c fbpanel-4.3/plugins/taskbar.c
+--- fbpanel-4.3.orig/plugins/taskbar.c	2005-05-31 21:13:31.000000000 +0200
++++ fbpanel-4.3/plugins/taskbar.c	2006-08-20 12:22:34.000000000 +0200
+@@ -1079,7 +1079,7 @@
+           G_CALLBACK (tb_net_active_window), (gpointer) tb);
+     g_signal_connect (G_OBJECT (fbev), "number_of_desktops",
+           G_CALLBACK (tb_net_number_of_desktops), (gpointer) tb);
+-    g_signal_connect (G_OBJECT (fbev), "client_list_stacking",
++    g_signal_connect (G_OBJECT (fbev), "client_list",
+           G_CALLBACK (tb_net_client_list), (gpointer) tb);
+ 
+     tb->desk_num = get_net_number_of_desktops();
