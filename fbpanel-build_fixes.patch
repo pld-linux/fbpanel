@@ -1,6 +1,119 @@
+diff -aurN fbpanel-4.3.orig/config/default.cfg fbpanel-4.3/config/default.cfg
+--- fbpanel-4.3.orig/config/default.cfg	2005-05-21 17:44:18.000000000 +0200
++++ fbpanel-4.3/config/default.cfg	2006-08-20 12:51:02.000000000 +0200
+@@ -50,7 +50,7 @@
+ 
+ #     # Identify panel window type as dock 
+ #     # legal values are boolean
+-#     SetDockTpe = true
++#     SetDockType = true
+ 
+ #     # Reserve panel's space so that it will not be covered by maximazied windows
+ #     # legal values are boolean
+@@ -126,11 +126,11 @@
+     type = menu
+     config {
+ #        name = menu
+-        image = PREFIX/share/fbpanel/images/Menu.png
++        image = /usr/share/fbpanel/images/Menu.png
+         
+         menu {
+             name = Networking
+-            image = PREFIX/share/fbpanel/images/Networking.png
++            image = /usr/share/fbpanel/images/Networking.png
+             item {
+ #                image = 
+                 name = mozilla
+@@ -147,19 +147,19 @@
+         }
+         item {
+             name = Configure
+-            image = PREFIX/share/fbpanel/images/settings.png
++            image = /usr/share/fbpanel/images/settings.png
+             command = configure
+         }    
+         separator {
+         }
+         item {
+             name = terminal
+-            image = PREFIX/share/fbpanel/images/GNOME-Terminal.png
++            image = /usr/share/fbpanel/images/GNOME-Terminal.png
+             action = xterm
+         }
+         item {
+             name = emacs
+-            image = PREFIX/share/fbpanel/images/Emacs.png
++            image = /usr/share/fbpanel/images/Emacs.png
+             action = emacs
+         }
+ 
+@@ -176,12 +176,12 @@
+     type = launchbar
+     config {
+         button {
+-            image = PREFIX/share/fbpanel/images/GNOME-Terminal.png
++            image = /usr/share/fbpanel/images/GNOME-Terminal.png
+             tooltip = Terminal
+             action = xterm
+         }
+         button {
+-            image = PREFIX/share/fbpanel/images/Emacs.png
++            image = /usr/share/fbpanel/images/Emacs.png
+             tooltip = Emacs
+             action = emacs
+         }
+@@ -203,21 +203,21 @@
+ Plugin {
+     type = icons
+     config {
+-        DefaultIcon = PREFIX/share/fbpanel/images/default.xpm     
++        DefaultIcon = /usr/share/fbpanel/images/default.xpm     
+         application {
+-            Image = PREFIX/share/fbpanel/images/GNOME-Terminal.png
++            Image = /usr/share/fbpanel/images/GNOME-Terminal.png
+             ClassName = XTerm
+         }
+         application {
+-            Image =  PREFIX/share/fbpanel/images/GNOME-Terminal.png
++            Image =  /usr/share/fbpanel/images/GNOME-Terminal.png
+             ClassName = mlterm
+         }
+         application {
+-            Image =  PREFIX/share/fbpanel/images/GNOME-Terminal.png
++            Image =  /usr/share/fbpanel/images/GNOME-Terminal.png
+             ClassName = URxvt
+         }
+         application {
+-            Image = PREFIX/share/fbpanel/images/Emacs.png
++            Image = /usr/share/fbpanel/images/Emacs.png
+             AppName = emacs
+             ClassName = Emacs
+         }
+diff -aurN fbpanel-4.3.orig/config/Makefile fbpanel-4.3/config/Makefile
+--- fbpanel-4.3.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
++++ fbpanel-4.3/config/Makefile	2006-08-20 12:52:23.000000000 +0200
+@@ -17,11 +17,12 @@
+ 
+ 
+ install: 
+-	install -d  $(PREFIX)/share/fbpanel
+-	install -m 644 $(TARGET) $(PREFIX)/share/fbpanel
+-	install -d  $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
+-	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
++	install -d  $(DESTDIR)/etc/fbpanel
++	install -m 644 $(TARGET) $(DESTDIR)/etc/fbpanel
++	install -d  $(DESTDIR)$(DATADIR)/fbpanel
++	install -d  $(DESTDIR)$(DATADIR)/fbpanel/images
++	install -m 644 images/*.png $(DESTDIR)$(DATADIR)/fbpanel/images
++	install -m 644 images/*.xpm $(DESTDIR)$(DATADIR)/fbpanel/images
+ 
+ uninstall:
+-	$(RM) -r $(PREFIX)/share/fbpanel/images/
++	$(RM) -r $(DATADIR)/fbpanel/images/
 diff -aurN fbpanel-4.3.orig/Makefile fbpanel-4.3/Makefile
 --- fbpanel-4.3.orig/Makefile	2005-05-31 16:55:50.000000000 +0200
-+++ fbpanel-4.3/Makefile	2005-06-01 09:44:55.000000000 +0200
++++ fbpanel-4.3/Makefile	2006-08-20 12:48:23.000000000 +0200
 @@ -48,8 +48,8 @@
  	$(RM) Makefile.config config.h
  
@@ -14,80 +127,41 @@ diff -aurN fbpanel-4.3.orig/Makefile fbpanel-4.3/Makefile
  	$(RM) $(PREFIX)/bin/$(TARGET)
 diff -aurN fbpanel-4.3.orig/Makefile.common fbpanel-4.3/Makefile.common
 --- fbpanel-4.3.orig/Makefile.common	2005-05-31 17:39:18.000000000 +0200
-+++ fbpanel-4.3/Makefile.common	2005-06-01 09:44:13.000000000 +0200
-@@ -89,7 +89,7 @@
++++ fbpanel-4.3/Makefile.common	2006-08-20 12:48:57.000000000 +0200
+@@ -85,11 +85,13 @@
+ RM      = rm -f
+ CC      = gcc
+ AR      = ar
+-LIBS    = $(shell pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0) -L/usr/X11R6/lib  -lXmu
++LIBS    = $(shell pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0) -lXmu
  INCS2   = $(shell pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 gdk-pixbuf-xlib-2.0)
  INCS   := $(INCS2:-I%=-isystem %)
  
 -CFLAGS = -O2
++LDFLAGS += -Wl,-export-dynamic
++
 +CFLAGS = $(OPTFLAGS)
  ifeq (1,$(DEVEL))
  override CFLAGS += -g
  endif
-diff -aurN fbpanel-4.3.orig/config/Makefile fbpanel-4.3/config/Makefile
---- fbpanel-4.3.orig/config/Makefile	2005-05-22 02:46:13.000000000 +0200
-+++ fbpanel-4.3/config/Makefile	2005-06-01 09:52:49.000000000 +0200
-@@ -17,11 +17,12 @@
- 
- 
- install: 
--	install -d  $(PREFIX)/share/fbpanel
--	install -m 644 $(TARGET) $(PREFIX)/share/fbpanel
--	install -d  $(PREFIX)/share/fbpanel/images
--	install -m 644 images/*.png $(PREFIX)/share/fbpanel/images
--	install -m 644 images/*.xpm $(PREFIX)/share/fbpanel/images
-+	install -d  $(DESTDIR)/etc/fbpanel
-+	install -m 644 $(TARGET) $(DESTDIR)/etc/fbpanel
-+	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel
-+	install -d  $(DESTDIR)$(PREFIX)/share/fbpanel/images
-+	install -m 644 images/*.png $(DESTDIR)$(PREFIX)/share/fbpanel/images
-+	install -m 644 images/*.xpm $(DESTDIR)$(PREFIX)/share/fbpanel/images
- 
- uninstall:
- 	$(RM) -r $(PREFIX)/share/fbpanel/images/
 diff -aurN fbpanel-4.3.orig/man/Makefile fbpanel-4.3/man/Makefile
 --- fbpanel-4.3.orig/man/Makefile	2005-05-22 02:51:08.000000000 +0200
-+++ fbpanel-4.3/man/Makefile	2005-06-01 09:46:59.000000000 +0200
++++ fbpanel-4.3/man/Makefile	2006-08-20 12:52:45.000000000 +0200
 @@ -17,8 +17,8 @@
  
  
  install: all
 -	install -d  $(PREFIX)/share/man/man1
 -	install -m 644 $(TARGET) $(PREFIX)/share/man/man1
-+	install -d $(DESTDIR)$(PREFIX)/share/man/man1
-+	install -m 644 $(TARGET) $(DESTDIR)$(PREFIX)/share/man/man1
++	install -d $(DESTDIR)$(DATADIR)/man/man1
++	install -m 644 $(TARGET) $(DESTDIR)$(DATADIR)/man/man1
  
  uninstall:
- 	$(RM) $(PREFIX)/share/man/man1/$(TARGET)
-diff -aurN fbpanel-4.3.orig/panel.c fbpanel-4.3/panel.c
---- fbpanel-4.3.orig/panel.c	2005-05-08 09:46:40.000000000 +0200
-+++ fbpanel-4.3/panel.c	2005-06-01 09:50:58.000000000 +0200
-@@ -706,8 +706,8 @@
-     //ERR("Can't load %s\n", fname);
-     g_free(fname);
-     
--    /* check private configuration directory */
--    fname = g_strdup_printf("%s/share/fbpanel/%s", PREFIX, profile);
-+    /* check system-wide configuration directory */
-+    fname = g_strdup_printf("/etc/fbpanel/%s", profile);
-     fp = fopen(fname, "r");
-     LOG(LOG_INFO, "   %s %s\n", fname, fp ? "ok" : "no");
-     if (fp) {
-diff -aurN fbpanel-4.3.orig/plugin.c fbpanel-4.3/plugin.c
---- fbpanel-4.3.orig/plugin.c	2005-05-29 06:02:03.000000000 +0200
-+++ fbpanel-4.3/plugin.c	2005-06-01 09:49:53.000000000 +0200
-@@ -137,7 +137,7 @@
-         LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
-         if (!m) {
-             DBG("error is %s\n", g_module_error());
--            g_string_printf(str, "%s/share/fbpanel/plugins/%s.so", PREFIX, type);
-+            g_string_printf(str, "%s/lib/fbpanel/plugins/%s.so", PREFIX, type);
-             m = g_module_open(str->str, G_MODULE_BIND_LAZY);
-             LOG(LOG_INFO, "   %s ... %s\n", str->str, m ? "ok" : "no");
-             if (!m) {
+-	$(RM) $(PREFIX)/share/man/man1/$(TARGET)
++	$(RM) $(DATADIR)/man/man1/$(TARGET)
 diff -aurN fbpanel-4.3.orig/plugins/Makefile fbpanel-4.3/plugins/Makefile
 --- fbpanel-4.3.orig/plugins/Makefile	2005-05-31 17:45:06.000000000 +0200
-+++ fbpanel-4.3/plugins/Makefile	2005-06-01 09:48:12.000000000 +0200
++++ fbpanel-4.3/plugins/Makefile	2006-08-20 12:48:23.000000000 +0200
 @@ -47,8 +47,8 @@
  
  ifeq (0,$(STATIC_PLUGINS))
@@ -101,7 +175,7 @@ diff -aurN fbpanel-4.3.orig/plugins/Makefile fbpanel-4.3/plugins/Makefile
  	$(RM) -r $(PREFIX)/share/fbpanel/plugins/
 diff -aurN fbpanel-4.3.orig/systray/Makefile fbpanel-4.3/systray/Makefile
 --- fbpanel-4.3.orig/systray/Makefile	2005-05-31 17:31:27.000000000 +0200
-+++ fbpanel-4.3/systray/Makefile	2005-06-01 09:49:08.000000000 +0200
++++ fbpanel-4.3/systray/Makefile	2006-08-20 12:48:23.000000000 +0200
 @@ -41,8 +41,8 @@
  
  ifeq (0,$(STATIC_PLUGINS))
