@@ -1,5 +1,5 @@
 Summary:	Lightweight and NETWM compliant desktop panel
-Summary(pl.UTF-8):   Lekki i zgodny z NETWM panel
+Summary(pl.UTF-8):	Lekki i zgodny z NETWM panel
 Name:		fbpanel
 Version:	4.3
 Release:	2
