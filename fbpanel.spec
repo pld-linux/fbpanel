@@ -1,12 +1,12 @@
 Summary:	Lightweight and NETWM compliant desktop panel
 Summary(pl.UTF-8):	Lekki i zgodny z NETWM panel
 Name:		fbpanel
-Version:	4.3
-Release:	3
+Version:	6.1
+Release:	1
 License:	GPL
 Group:		X11/Applications
-Source0:	http://dl.sourceforge.net/fbpanel/%{name}-%{version}.tgz
-# Source0-md5:	2d2f3713cf3c17b71997064f39d4c888
+Source0:	http://downloads.sourceforge.net/project/fbpanel/fbpanel/%{version}/%{name}-%{version}.tbz2
+# Source0-md5:	80ca0c64195b30587cfcb8c2cd9887a0
 Source1:	%{name}.menu.readme
 Patch0:		%{name}-build_fixes.patch
 Patch1:		%{name}-file_watcher.patch
@@ -26,11 +26,11 @@ fbpanel to lekki i zgodny ze specyfikacją NETWM panel.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+# %patch0 -p1
+# %patch1 -p1
+# %patch2 -p1
 
-sed -i -e 's|/lib/fbpanel|/%{_lib}/fbpanel|' plugin.c
+# sed -i -e 's|/lib/fbpanel|/%{_lib}/fbpanel|' plugin.c
 
 %build
 # no auto* tools here
@@ -56,9 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG CREDITS README fbpanel.menu.readme
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fbpanel
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/%{name}
-%attr(755,root,root) %{_libdir}/%{name}/plugins
+%{_libdir}/%{name}/*.so
 %{_datadir}/%{name}
-%{_mandir}/man1/fbpanel*
