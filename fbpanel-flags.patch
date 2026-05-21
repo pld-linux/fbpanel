@@ -1,0 +1,35 @@
+--- fbpanel-6.1/rules.mk.orig	2026-05-21 02:00:00.000000000 +0200
++++ fbpanel-6.1/rules.mk	2026-05-21 02:00:00.000000000 +0200
+@@ -38,8 +38,9 @@
+ ifeq ($(DEBUG),enabled)
+ 	override CFLAGS = -Wall -I$(TOPDIR) -g -Werror 
+ else
+-	CFLAGS += -O2 -Wall -I$(TOPDIR) 
++	CFLAGS += -O2
+ endif
++override CFLAGS += -Wall -I$(TOPDIR)
+ 
+  
+ T := $(subst $(TOPDIR)/,,$(CURDIR)/)
+--- fbpanel-6.1/panel/Makefile.in.orig	2026-05-21 02:00:00.000000000 +0200
++++ fbpanel-6.1/panel/Makefile.in	2026-05-21 02:00:00.000000000 +0200
+@@ -5,7 +5,7 @@
+ #SRCS += configurator.c 
+ 
+ BINTARGET = fbpanel
+-LDFLAGS += $(GMODULE_LIBS)
++override LDFLAGS += $(GMODULE_LIBS) -lm
+ 
+ ifeq (enabled,$(STATIC_BUILD))
+ OBJS += $(wildcard $(TOPDIR)/plugins/*/*.o)
+--- fbpanel-6.1/panel/plugin.h.orig	2026-05-21 02:00:00.000000000 +0200
++++ fbpanel-6.1/panel/plugin.h	2026-05-21 02:00:00.000000000 +0200
+@@ -9,7 +9,7 @@
+ #include <stdio.h>
+ #include "panel.h"
+ 
+-struct _plugin_instance *stam;
++struct _plugin_instance;
+ 
+ typedef struct {
+     /* common */

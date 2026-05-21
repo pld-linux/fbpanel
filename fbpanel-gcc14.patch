@@ -1,0 +1,11 @@
+--- fbpanel-6.1/panel/misc.h.orig	2026-05-21 01:33:59.488079123 +0200
++++ fbpanel-6.1/panel/misc.h	2026-05-21 01:34:03.419552356 +0200
+@@ -45,7 +45,7 @@
+
+ void menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, GtkWidget *widget);
+
+-void configure();
++void configure(xconf *xc);
+ gchar *indent(int level);
+
+ FILE *get_profile_file(gchar *profile, char *perm);
